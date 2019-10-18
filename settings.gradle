@@ -1,0 +1,8 @@
+/*
+ * Copyright (c) 2019.
+ * Grigory Pletnev
+ * gpletnev@gmail.com
+ */
+
+rootProject.name = 'orpheusradiodownloader'
+
