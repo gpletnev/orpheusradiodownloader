@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val root = "http://muzcentrum.ru"
-private const val programsArchive = "http://muzcentrum.ru/orpheusradio/programsarchive"
+private const val programsArchive = "http://www.muzcentrum.ru/radio-old/programsarchive"
 private val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
 private val outSimpleDateFormat = SimpleDateFormat("yyyy.MM.dd")
 
@@ -75,7 +75,7 @@ fun main(args: Array<String>) = runBlocking {
                     if (archive != null) {
                         val program = archive.programs.find { it.url.substringAfterLast("/") == args[0] }
                         if (program != null) {
-                            if (!program.list.isEmpty()) {
+                            if (program.list.isNotEmpty()) {
                                 val programPath = "${root.absolutePath}${File.separatorChar}${args[0]}"
                                 val programDir = File(programPath)
                                 programDir.mkdir()
@@ -121,7 +121,7 @@ fun Record.saveMp3(dir: String): String {
         id3v2Tag.artist = artist
         id3v2Tag.album = album
         id3v2Tag.url = url
-        id3v2Tag.date = outSimpleDateFormat.format(date)
+        //id3v2Tag.date = outSimpleDateFormat.format(date)
         id3v2Tag.setAlbumImage(URL(imgUrl).openStream().readBytes(), "image/jpg")
     }
 
@@ -191,7 +191,7 @@ fun getRecords(
         val blog = Jsoup.connect("${program.url}?start=$page").get().selectFirst("div.blog")
         blog.getElementsByAttributeValue("itemprop", "blogPost").forEach {
             val dateString = it.selectFirst("div.page-header").text()
-            val date = simpleDateFormat.parse(dateString)
+            //val date = simpleDateFormat.parse(dateString)
 
             val a = it.select("div.ait-txt").first().getElementsByAttribute("href").first()
             val link = "$root${a.attr("href")}"
@@ -202,7 +202,6 @@ fun getRecords(
             records.add(
                 Record(
                     url = link,
-                    date = date,
                     imgUrl = if (thumbnail != null && !thumbnail.startsWith("http")) "$root$thumbnail" else thumbnail,
                     album = program.title,
                     artist = program.artist
